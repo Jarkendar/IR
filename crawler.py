@@ -260,6 +260,8 @@ def removeDuplicates(c, newURLs):
 # Filter out some URLs (TODO)
 def getFilteredURLs(c, newURLs):
     toLeft = set([url for url in newURLs if url not in c.URLs])
+    if c.toFetch in toLeft:
+        toLeft.remove(c.toFetch)
     if c.debug:
         print("   Filtered out " + str(len(newURLs) - len(toLeft)) + " urls")  
     return toLeft

@@ -13,6 +13,30 @@ from html.parser import HTMLParser
 # -------------------------------------------------------------------------
 ### generatePolicy classes
 
+class Lifo_Cycle_Policy:
+    def __init__(self, c):
+        self.lifo = []
+        self.lifo.append(c.seedURLs[0])
+
+    def getURL(self, c, iteration):
+        if len(self.lifo) == 0:  # return link
+            self.lifo = c.seedURLs.copy()
+            c.URLs.clear()
+            ret = self.lifo[len(self.lifo) - 1]
+            self.lifo.remove(ret)
+            return ret
+        else:
+            ret = self.lifo[len(self.lifo) - 1]
+            self.lifo.remove(ret)
+            return ret
+
+    def updateURLs(self, c, newURLs, newURLsWD, iteration):  # update kolejki
+        temporaryURLsList = list(newURLs.copy())
+        temporaryURLsList.sort(key=lambda url: url[len(url) - url[::-1].index('/'):])
+        for url in temporaryURLsList:
+            self.lifo.insert(len(self.lifo), url)
+        # print(self.lifo)
+
 class Fifo_Policy:
     def __init__(self, c):
         self.fifo = []
@@ -86,7 +110,7 @@ class Container:  # niegrzeczny crawler
         # The name of the crawler"
         self.crawlerName = "IRbot"  # przedstawanie pająka
         # Example ID
-        self.example = "exercise1"  # do zmiany co zadanie
+        self.example = "exercise2"  # do zmiany co zadanie
         # Root (host) page
         self.rootPage = "http://www.cs.put.poznan.pl/mtomczyk/ir/lab1/" + self.example
         # Initial links to visit
@@ -98,10 +122,13 @@ class Container:  # niegrzeczny crawler
         self.outgoingURLs = {}
         # Incoming URLs (to <- from; set of incoming links)
         self.incomingURLs = {}
-        # Class which maintains a queue of urls to visit. 
+        # Class which maintains a queue of urls to visit.
+
         # self.generatePolicy = Dummy_Policy()#init policy
-        # self.generatePolicy = Lifo_Policy(self)  # init policy
-        self.generatePolicy = Fifo_Policy(self)  # init policy
+        self.generatePolicy = Lifo_Policy(self)  # init policy
+        # self.generatePolicy = Fifo_Policy(self)  # init policy
+        # self.generatePolicy = Lifo_Cycle_Policy(self)  # init policy
+
         # Page (URL) to be fetched next
         self.toFetch = None  # link w tej iteracji lub pobrana
         # Number of iterations of a crawler. 

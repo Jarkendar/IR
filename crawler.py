@@ -125,9 +125,9 @@ class Container:  # niegrzeczny crawler
         # Class which maintains a queue of urls to visit.
 
         # self.generatePolicy = Dummy_Policy()#init policy
-        self.generatePolicy = Lifo_Policy(self)  # init policy
+        # self.generatePolicy = Lifo_Policy(self)  # init policy
         # self.generatePolicy = Fifo_Policy(self)  # init policy
-        # self.generatePolicy = Lifo_Cycle_Policy(self)  # init policy
+        self.generatePolicy = Lifo_Cycle_Policy(self)  # init policy
 
         # Page (URL) to be fetched next
         self.toFetch = None  # link w tej iteracji lub pobrana
